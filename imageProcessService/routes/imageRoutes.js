@@ -20,7 +20,6 @@ router.post('/', upload.single('image'), async (req, res) => {
           const response = await axios.post(`${process.env.ROTATE_IMAGE_URL}`, formData , {
             headers: formData.getHeaders(),
           });
-           console.log(response);         
           res.status(200).json({
             "success": "done",
           });

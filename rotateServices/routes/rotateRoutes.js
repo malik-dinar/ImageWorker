@@ -14,7 +14,6 @@ router.post('/', upload.single('image'), async (req, res) => {
            "sample" : "resposne"
        }
        const rotatedImage = await sharp(origalImage).rotate(90).toBuffer();
-       console.log(rotatedImage);
        
         const imageUrl = await uploadImageToCloudinary(origalImage);
         const rotatedImageUrl = await uploadImageToCloudinary(rotatedImage);

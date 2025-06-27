@@ -2,7 +2,7 @@ const express = require('express');
 let PORT = 5001;
 var cors = require('cors');
 const app = express();
-const imageRoutes = require("./routes/imageRoutes");
+const imageRoutes = require("./src/routes/imageRoutes");
 
 app.use(cors());
 app.use(express.json());

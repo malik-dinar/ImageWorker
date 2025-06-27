@@ -2,7 +2,7 @@ const express = require('express');
 let PORT = 5002;
 var cors = require('cors');
 const app = express();
-const rotateRoutes = require("./routes/rotateRoutes");
+const rotateRoutes = require("./src/routes/rotateRoutes");
 
 app.use(cors());
 app.use(express.json());

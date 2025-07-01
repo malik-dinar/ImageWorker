@@ -3,6 +3,7 @@ const router = express.Router();
 var multer  = require('multer')
 const sharp = require('sharp');
 const { uploadImageToCloudinary } = require('../service/imgageUploadCloud');
+const saveImageToDB = require('../service/saveImageToDB');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -17,6 +18,8 @@ router.post('/', upload.single('image'), async (req, res) => {
        
         const imageUrl = await uploadImageToCloudinary(origalImage);
         const rotatedImageUrl = await uploadImageToCloudinary(rotatedImage);
+
+        saveImageToDB(imageUrl, rotatedImageUrl);
 
        console.log(imageUrl, "image url",rotatedImageUrl);
        

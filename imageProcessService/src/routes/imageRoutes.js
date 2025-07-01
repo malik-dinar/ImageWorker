@@ -2,6 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const multer  = require('multer')
 const FormData = require('form-data');
+const saveNameToDB = require('../service/saveNameToDB');
 require('dotenv').config();
 
 const router = express.Router();
@@ -16,7 +17,8 @@ router.post('/', upload.single('image'), async (req, res) => {
             contentType: req.file.mimetype,
           });
 
-          console.log(req.file);
+          await saveNameToDB(req.file.originalname);  
+                            
           const response = await axios.post(`${process.env.ROTATE_IMAGE_URL}`, formData , {
             headers: formData.getHeaders(),
           });

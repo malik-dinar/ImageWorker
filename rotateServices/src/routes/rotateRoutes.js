@@ -20,8 +20,6 @@ router.post('/', upload.single('image'), async (req, res) => {
         const rotatedImageUrl = await uploadImageToCloudinary(rotatedImage);
 
         await saveImageToDB(imageUrl, rotatedImageUrl);
-
-       console.log(imageUrl, "image url",rotatedImageUrl);
        
        res.json(data);
     } catch (error){

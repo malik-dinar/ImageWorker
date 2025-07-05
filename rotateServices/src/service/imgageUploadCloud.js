@@ -2,7 +2,6 @@ const cloudinary = require('cloudinary')
 require('dotenv').config();
 
 async function uploadImageToCloudinary(origalImage, rotatedImage) {
-    console.log('upload function cloud');
 
      cloudinary.config({ 
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
@@ -17,8 +16,6 @@ async function uploadImageToCloudinary(origalImage, rotatedImage) {
           return resolve(uploadResult.url);
       }).end(origalImage);
     });
-
-    console.log(uploadResultOriginalImage);
 
     return uploadResultOriginalImage
     

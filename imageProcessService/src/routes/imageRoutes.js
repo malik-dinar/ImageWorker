@@ -36,6 +36,7 @@ router.post('/', upload.single('image'), async (req, res) => {
           ])
 
           res.status(200).json({
+               success: true,
                rotatedImage: rotateResponse.data,
                grayScaleImage: grayResponse.data
           });

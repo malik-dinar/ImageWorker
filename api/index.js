@@ -13,6 +13,7 @@ app.use(cors({
 const routes = {
   '/api/image-processing':"http://localhost:5001",
   '/api/image-rotation':"http://localhost:5002",
+  '/api/image-gray':"http://localhost:5003",
 }
 
 for(const route in routes){

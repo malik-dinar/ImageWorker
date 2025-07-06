@@ -9,7 +9,7 @@ async function uploadImageToCloudinary(origalImage, rotatedImage) {
         api_secret: process.env.CLOUDINARY_API_SECRET,  
     });
   
-    const folderName = "images";
+    const folderName = "images-rotate";
 
     const uploadResultOriginalImage = await new Promise((resolve) => {
       cloudinary.v2.uploader.upload_stream({ folder: folderName },(error, uploadResult) => {

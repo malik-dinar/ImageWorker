@@ -11,20 +11,33 @@ const upload = multer({ storage: storage });
 
 router.post('/', upload.single('image'), async (req, res) => {
      try{
-          const formData = new FormData();
-          formData.append('image', req.file.buffer, {
-            filename: req.file.originalname,
-            contentType: req.file.mimetype,
-          });
+          const createFormData = () =>{
+               const formData = new FormData();
+               formData.append('image', req.file.buffer, {
+                 filename: req.file.originalname,
+                 contentType: req.file.mimetype,
+               });
+               return formData
+          }
+
+          const formDataRotate = createFormData();
+          const formDataGray = createFormData();
 
           await saveNameToDB(req.file.originalname);  
-                            
-          const response = await axios.post(`${process.env.ROTATE_IMAGE_URL}`, formData , {
-            headers: formData.getHeaders(),
+          
+          const rotateResponse = await axios.post(`${process.env.ROTATE_IMAGE_URL}`, formDataRotate , {
+               headers: formDataRotate.getHeaders(),
           });
+
+          const grayResponse = await axios.post(`${process.env.GRAY_IMAGE_URL}`, formDataGray , {
+            headers: formDataGray.getHeaders(),
+          });
+
           res.status(200).json({
-            "success": "done",
+               rotatedImage: rotateResponse.data,
+               grayScaleImage: grayResponse.data
           });
+          
      } catch (error){
           console.log(error);
           return res.sendStatus(400);

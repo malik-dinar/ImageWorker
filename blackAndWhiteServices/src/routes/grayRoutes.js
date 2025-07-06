@@ -11,14 +11,16 @@ const upload = multer({ storage: storage });
 router.post('/', upload.single('image'), async (req, res) => {
     try{
        const origalImage = req.file.buffer
-       const rotatedImage = await sharp(origalImage).rotate(90).toBuffer();
-       
-        const imageUrl = await uploadImageToCloudinary(origalImage);
-        const rotatedImageUrl = await uploadImageToCloudinary(rotatedImage);
 
-        await saveImageToDB(imageUrl, rotatedImageUrl);
+       const grayscaleImage = await sharp(origalImage).grayscale().toBuffer();
+
+        const imageUrl = await uploadImageToCloudinary(origalImage);
+        const grayScaleImageUrl = await uploadImageToCloudinary(grayscaleImage);
+
+        await saveImageToDB(imageUrl, grayScaleImageUrl);
        
-       res.json(rotatedImageUrl);
+       res.json(grayScaleImageUrl);
+       
     } catch (error){
        console.log(error);
        return res.sendStatus(400);
@@ -29,6 +31,7 @@ router.get('/', async (req, res) => {
     const data = {
         "sample" : "resposne"
     }
+
     res.json(data);
 })
 

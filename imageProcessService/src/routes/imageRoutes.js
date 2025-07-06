@@ -25,19 +25,21 @@ router.post('/', upload.single('image'), async (req, res) => {
 
           await saveNameToDB(req.file.originalname);  
           
-          const rotateResponse = await axios.post(`${process.env.ROTATE_IMAGE_URL}`, formDataRotate , {
-               headers: formDataRotate.getHeaders(),
-          });
 
-          const grayResponse = await axios.post(`${process.env.GRAY_IMAGE_URL}`, formDataGray , {
-            headers: formDataGray.getHeaders(),
-          });
+          const [rotateResponse, grayResponse] =await Promise.all([
+               axios.post(`${process.env.ROTATE_IMAGE_URL}`, formDataRotate , {
+                    headers: formDataRotate.getHeaders(),
+               }),
+                axios.post(process.env.GRAY_IMAGE_URL, formDataGray, {
+                 headers: formDataGray.getHeaders(),
+               }),
+          ])
 
           res.status(200).json({
                rotatedImage: rotateResponse.data,
                grayScaleImage: grayResponse.data
           });
-          
+
      } catch (error){
           console.log(error);
           return res.sendStatus(400);

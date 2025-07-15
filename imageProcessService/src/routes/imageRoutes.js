@@ -3,6 +3,7 @@ const axios = require('axios');
 const multer  = require('multer')
 const FormData = require('form-data');
 const saveNameToDB = require('../service/saveNameToDB');
+const { uploadImageToCloudinary } = require('../service/imageUploadCloud');
 require('dotenv').config();
 
 const router = express.Router();
@@ -11,28 +12,16 @@ const upload = multer({ storage: storage });
 
 router.post('/', upload.single('image'), async (req, res) => {
      try{
-          const createFormData = () =>{
-               const formData = new FormData();
-               formData.append('image', req.file.buffer, {
-                 filename: req.file.originalname,
-                 contentType: req.file.mimetype,
-               });
-               return formData
-          }
-
-          const formDataRotate = createFormData();
-          const formDataGray = createFormData();
+          const origalImage = req.file.buffer;
 
           await saveNameToDB(req.file.originalname);  
-          
 
+          const imageUrl = await uploadImageToCloudinary(origalImage);
+          const data = { imageUrl }
+          
           const [rotateResponse, grayResponse] =await Promise.all([
-               axios.post(`${process.env.ROTATE_IMAGE_URL}`, formDataRotate , {
-                    headers: formDataRotate.getHeaders(),
-               }),
-                axios.post(process.env.GRAY_IMAGE_URL, formDataGray, {
-                 headers: formDataGray.getHeaders(),
-               }),
+               axios.post(process.env.ROTATE_IMAGE_URL, data ),
+               axios.post(process.env.GRAY_IMAGE_URL, data),
           ])
 
           res.status(200).json({

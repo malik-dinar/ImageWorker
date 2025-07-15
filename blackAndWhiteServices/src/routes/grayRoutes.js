@@ -4,23 +4,24 @@ var multer  = require('multer')
 const sharp = require('sharp');
 const { uploadImageToCloudinary } = require('../service/imgageUploadCloud');
 const saveImageToDB = require('../service/saveImageToDB');
+const { getImageBuffer } = require('../service/getImageBuffer');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', async (req, res) => {
     try{
-       const origalImage = req.file.buffer
-
-       const grayscaleImage = await sharp(origalImage).grayscale().toBuffer();
-
-        const imageUrl = await uploadImageToCloudinary(origalImage);
-        const grayScaleImageUrl = await uploadImageToCloudinary(grayscaleImage);
-
-        await saveImageToDB(imageUrl, grayScaleImageUrl);
-       
-       res.json(grayScaleImageUrl);
-       
+        const { imageUrl } = req.body;
+        getImageBuffer(imageUrl)
+        .then(async(origalImage) => {
+            const grayscaleImage = await sharp(origalImage).grayscale().toBuffer();
+            const grayScaleImageUrl = await uploadImageToCloudinary(grayscaleImage);
+            await saveImageToDB(imageUrl, grayScaleImageUrl);
+            res.json(grayScaleImageUrl);
+        })
+        .catch(error => {
+            console.error('Failed to get image buffer:', error);
+        });   
     } catch (error){
        console.log(error);
        return res.sendStatus(400);

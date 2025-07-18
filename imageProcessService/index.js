@@ -4,6 +4,7 @@ var cors = require('cors');
 const app = express();
 const imageRoutes = require("./src/routes/imageRoutes");
 const connectDb = require('./src/config/dbConnection');
+const { initProducer, startConsumer } = require('./src/service/kafka');
 
 app.use(cors());
 app.use(express.json());
@@ -16,8 +17,11 @@ app.use(
   
 app.use(`/`, imageRoutes); 
 
-connectDb()
+async function startServer() {
+  connectDb();
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
 
-app.listen(PORT,()=>{
-    console.log("IMAGE PROCESS SERVICE RUNNING ON PORT " + PORT);
-});
+startServer();

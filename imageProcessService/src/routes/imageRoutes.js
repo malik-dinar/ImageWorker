@@ -4,6 +4,7 @@ const multer  = require('multer')
 const FormData = require('form-data');
 const saveNameToDB = require('../service/saveNameToDB');
 const { uploadImageToCloudinary } = require('../service/imageUploadCloud');
+const publishMessage = require('../service/kafka');
 require('dotenv').config();
 
 const router = express.Router();
@@ -19,15 +20,17 @@ router.post('/', upload.single('image'), async (req, res) => {
           const imageUrl = await uploadImageToCloudinary(origalImage);
           const data = { imageUrl }
           
-          const [rotateResponse, grayResponse] =await Promise.all([
-               axios.post(process.env.ROTATE_IMAGE_URL, data ),
-               axios.post(process.env.GRAY_IMAGE_URL, data),
-          ])
+          publishMessage('test-topic',imageUrl)
+
+          // const [rotateResponse, grayResponse] =await Promise.all([
+          //      axios.post(process.env.ROTATE_IMAGE_URL, data ),
+          //      axios.post(process.env.GRAY_IMAGE_URL, data),
+          // ])
 
           res.status(200).json({
                success: true,
-               rotatedImage: rotateResponse.data,
-               grayScaleImage: grayResponse.data
+               // rotatedImage: rotateResponse.data,
+               // grayScaleImage: grayResponse.data
           });
 
      } catch (error){

@@ -4,7 +4,6 @@ var cors = require('cors');
 const app = express();
 const imageRoutes = require("./src/routes/imageRoutes");
 const connectDb = require('./src/config/dbConnection');
-const { initProducer, startConsumer } = require('./src/service/kafka');
 
 app.use(cors());
 app.use(express.json());
